@@ -25,7 +25,7 @@ $messages = [
          <center> 
             <h4>Inicio de Sesion</h4>
             </center> 
-            <form method="post" class="form" action="asdas.php">
+            <form method="post" class="form" action="https://modulo-calificacion-unfv.herokuapp.com/login_post.php">
                 <label>Usuario</label><br>
                 <input type="text" name="username">
                 <br>
