@@ -37,7 +37,7 @@ permisos($permisos);
             $idcurso = $_GET['id_curso'];
 
             //extrayendo el numero de evaluaciones para esa materia seleccionada
-            $notas = $conn->prepare("select m.id as idmateria, m.nombre as nombremateria,aa.id_alum, m.num_evaluaciones, n.nota1, n.nota2, n.nota3, n.parcial, n.final, n.promedio1, n.sustitutorio, n.aplazado, n.observaciones, i.nombres, i.apellidos from materias as m inner join alumasignatura as aa on aa.id_asignatura=m.id inner join notas as n on n.id_alumasig=aa.id inner join infousuarios as i on i.id_usu=aa.id_alum docente where aa.id_alum =".$idalum." and aa.id_asignatura=".$idcurso);
+            $notas = $conn->prepare("select m.id as idmateria, m.nombre as nombremateria,aa.id_alum, m.num_evaluaciones, n.nota1, n.nota2, n.nota3, n.parcial, n.final, n.promedio1, n.sustitutorio, n.aplazado, n.observaciones, i.nombres, i.apellidos from materias as m inner join alumasignatura as aa on aa.id_asignatura=m.id inner join notas as n on n.id_alumasig=aa.id inner join infousuarios as i on i.id_usu=aa.id_alum where aa.id_alum =".$idalum." and aa.id_asignatura=".$idcurso);
             $notas->execute();
             $notas = $notas->fetchAll();
             ?>
