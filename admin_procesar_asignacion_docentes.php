@@ -10,16 +10,16 @@ else {
     $id_docente = htmlentities($_POST ['id_docente']);
     $asignatura = htmlentities($_POST ['asignatura']);
     $seccion = htmlentities($_POST ['seccion']);
-
+    
 
     //insertar es el nombre del boton guardar que esta en el archivo alumnos.view.php
     if (isset($_POST['insertar'])){
 
         $result = $conn->query("insert into docenteasignatura (id_materia,id_usuario_docente,id_seccion) values ('$asignatura','$id_docente','$seccion')");
         if (isset($result)) {
-            header('location:admin_asignacion_docentes.php?info=1');
+            header('location:admin_listado_asignacion.php?info=1');
         } else {
-            header('location:admin_asignacion_docentes.php?err=1');
+            header('location:admin_listado_asignacion.php?err=1');
         }// validación de registro
 
     //sino boton modificar que esta en el archivo alumnoedit.view.php

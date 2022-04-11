@@ -14,10 +14,6 @@ if($_SESSION['rol'] =='Administrador') {
     } else {
         die('Ha ocurrido un error');
     }
-
-
-
-    
 }else{
     header('location:inicio.view.php?err=1');
 }

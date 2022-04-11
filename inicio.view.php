@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
 require 'functions.php';
-$permisos = ['Administrador','Profesor','Padre'];
+$permisos = ['Administrador','Profesor','Alumno'];
 permisos($permisos);
 
 ?>
@@ -31,14 +31,14 @@ permisos($permisos);
         <?php if($_SESSION["rol"] == "Profesor"){ ?>
 
    
-        <li class="active"><a href="profe_listado_cursos.php">Listado de Cursos</a> </li>
+        <li><a href="profe_listado_cursos.php">Listado de Cursos</a> </li>
         <li><a href="#">Consulta de Notas</a> </li>
 
 
         <?php } ?>
 
-        <?php if($_SESSION["rol"] == "Padre"){ ?>
-            <li><a href="notas.view.php">Cursos</a> </li>
+        <?php if($_SESSION["rol"] == "Alumno"){ ?>
+            <li><a href="alumno_listado_cursos.php">Cursos</a> </li>            
             <li><a href="listadonotas.view.php">Notas</a> </li>
         <?php } ?>        
 

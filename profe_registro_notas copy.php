@@ -35,8 +35,7 @@ if(isset($_GET['id'])) {
 <nav>
     <ul>
         <li><a href="inicio.view.php">Inicio</a> </li>
-        <li><a href="profe_listado_cursos.php">Listado de Cursos</a> </li>
-        <li class="active"><a href="#">Registro de Notas</a> </li>
+        <li class="active"><a href="profe_listado_cursos.php">Listado de Cursos</a> </li>
         <li><a href="#">Consulta de Notas</a> </li>
         <li class="right"><a href="logout.php">Salir</a> </li>
     </ul>
@@ -91,13 +90,13 @@ if(isset($_GET['id'])) {
 
 
             //mostrando el cuadro de notas de todos los alumnos del grado seleccionado
-            $sqlalumnos = $conn->prepare("select m.id as idmateria, m.nombre,aa.id_alum, m.num_evaluaciones, n.nota1, n.nota2, n.nota3, n.parcial, n.final, n.promedio1, n.sustitutorio, n.aplazado, n.observaciones, i.nombres, i.apellidos from materias as m inner join alumasignatura as aa on aa.id_asignatura=m.id inner join notas as n on n.id_alumasig=aa.id inner join infousuarios as i on i.id_usu=aa.id_alum where aa.id_asignatura=".$id_curso);
+            $sqlalumnos = $conn->prepare("select m.id as idmateria, m.nombre, m.num_evaluaciones,n.nota1,n.observaciones, a.id as idalumno, a.nombres,a.apellidos from materias as m inner join notas as n on m.id = n.id_materia inner join alumnos as a on n.id_alumno = a.id where m.id =".$id_curso);
             $sqlalumnos->execute();
             $alumnos = $sqlalumnos->fetchAll();
             $num_alumnos = $sqlalumnos->rowCount();
             ?>
             <br>
-            <button type="reset" onclick="window.location.href='profe_listado_cursos.php'">Regresar</button>
+            <a href="notas.view.php"><strong><< Volver</strong></a>
             <br>
             <br>
                 <form action="profe_procesar_nota.php" method="post">
@@ -105,76 +104,97 @@ if(isset($_GET['id'])) {
             <table class="table" cellpadding="0" cellspacing="0">
                 <tr>
                     <th>#</th><th>Apellidos</th><th>Nombres</th>
-                    <th>Nota 1</th>
-                    <th>Nota 2</th>
-                    <th>Nota 3</th>
-                    <th>Parcial</th>
-                    <th>Final</th>
-                    <th>Prom. 1</th>
-                    <th>Sustitutorio</th>
+                    <?php
+                        for($i = 1; $i <= $num_eval; $i++){
+                            
+                           echo '<th>Nota '.$i .'</th>';
+                        }
+                    ?>
                     <th>Promedio</th>
                     <th>Observaciones</th>
                     <th>Eliminar</th>
                 </tr>
 
-
+                <?php 
+                    $index_id_alumno=0;
+                    $promedio = 0;
+                ?>
                 <?php foreach ($alumnos as $index => $alumno) :?>
 
-                    <?php 
-                        $index_id_alumno=0;
-                        $prom1= ($alumno['nota1']+$alumno['nota2']+$alumno['nota3']+$alumno['parcial']+$alumno['final'])/5;
-                    ?>                
+
+                    <?php
+                        for($i = 1; $i <= $num_eval; $i++){
+                            $promedio = $promedio + $alumno['nota1'];                           
+                        }
+
+                        $promedio = $promedio/$num_eval;
+                    ?>                    
                     
                     <!-- campos ocultos necesarios para realizar el insert-->
                     <input type="hidden" value="<?php echo $num_alumnos ?>" name="num_alumnos">
                     
-                    <input type="hidden" value="<?php echo $alumno['id_alum'] ?>" name="<?php echo 'id_alumno'.$index ?>">
+                    <input type="hidden" value="<?php echo $alumno['idalumno'] ?>" name="<?php echo 'id_alumno'.$index ?>">
                     
                     <input type="hidden" value="<?php echo $num_eval ?>" name="num_eval">
                      <!-- campos para devolver los parametros en el get y mantener los mismos datos al hacer el header location-->
-                    <input type="hidden" value="<?php echo $id_curso ?>" name="id_curso">    
-                    
-                    
+                    <input type="hidden" value="<?php echo $id_curso ?>" name="id_curso">                    
 
-
-                    <?php if(strcmp(''.$alumno['id_alum'],''.$index_id_alumno)){ ?>
+                    <?php if(strcmp(''.$alumno['idalumno'],''.$index_id_alumno)){ ?>
 
                         <tr>
                             <td align="center">1</td>
                             <td><?php echo $alumno['apellidos'] ?></td>
                             <td><?php echo $alumno['nombres'] ?></td>
 
-                            <input type="hidden" value="<?php echo $alumno['nota1'] ?>" name="xn1<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['nota1'] ?>" name="n1<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            <?php
 
-                            <input type="hidden" value="<?php echo $alumno['nota2'] ?>" name="xn2<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['nota2'] ?>" name="n2<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            if(existeNota($alumno['idalumno'],$id_curso,$conn) > 0){
+                                    //ya tiene notas registradas
+                                    $notas = $conn->prepare("select id, nota1 from notas where id_alumno = ".$alumno['idalumno']." and id_curso = ".$id_curso);
+                                    $notas->execute();
+                                    $registrosnotas = $notas->fetchAll();
+                                    $num_notas = $notas->rowCount();                                
 
-                            <input type="hidden" value="<?php echo $alumno['nota3'] ?>" name="xn3<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['nota3'] ?>" name="n3<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                                    foreach ($registrosnotas as $eval => $nota){
+                                        $auxi = "evaluacion" . $eval . "alumno" . $index;
+                                        echo $auxi;
+                                        echo '<input type="hidden" value="'.$nota['id'].'" name="idnota' . $eval .'alumno' . $index . '">';
+                                        echo '<td><input type="text" maxlength="5" value="'.$nota['nota1'].'" name="'.$auxi.'" class="txtnota"></td>';
+                                    }
 
-                            <input type="hidden" value="<?php echo $alumno['parcial'] ?>" name="xn4<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['parcial'] ?>" name="n4<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                                    if($num_eval > $num_notas){
+                                        $dif = $num_eval - $num_notas;
 
-                            <input type="hidden" value="<?php echo $alumno['final'] ?>" name="xn5<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['final'] ?>" name="n5<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                                        for($i = $num_notas; $i < $dif + $num_notas; $i++) {
+                                            $auxi2 = "evaluacion" . $i . "alumno" . $index;
+                                            echo $auxi2;
+                                            echo '<input type="hidden" value="'.$nota['id'].'" name="idnota' . $i .'alumno' . $index . '">';
+                                            echo '<td><input type="text" maxlength="5" value="'.$nota['nota1'].'" name="'.$auxi2.'" class="txtnota"></td>';
+                                        }
+                                    }                                
+                                }else {
+                                    //extrayendo el numero de evaluaciones para esa materia seleccionada
+                                    for($i = 0; $i < $num_eval; $i++) {
+                                        echo '<td><input type="text" maxlength="5" name="evaluacion' . $i . 'alumno' . $index . '" class="txtnota"></td>';
+                                    }
+                                }
 
-                            <input type="hidden" value="<?php echo $prom1 ?>" name="xn5<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $prom1 ?>" name="n6<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                                echo '<td align="center">'.number_format($promedio, 2).'</td>';
 
-                            <input type="hidden" value="<?php echo $alumno['sustitutorio'] ?>" name="xn7<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['sustitutorio'] ?>" name="n7<?php echo $alumno['id_alum']?>" class="txtnota"></td>
-                        
-                            <input type="hidden" value="<?php echo $alumno['promedio_final'] ?>" name="xn8<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['sustitutorio'] ?>" name="n8<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                                if(existeNota($alumno['idalumno'],$id_curso,$conn) > 0){
+                                    echo '<td><input type="text" maxlength="100" value="'.$alumno['observaciones'].'" name="observaciones' . $index . '" class="txtnota"></td>';
+                                }else {
+                                    echo '<td><input type="text" name="observaciones' . $index . '" class="txtnota"></td>';
+                                }
 
-                            <input type="hidden" value="<?php echo $alumno['observaciones'] ?>" name="xobs<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['observaciones'] ?>" name="obs<?php echo $alumno['id_alum']?>" class="txtnota"></td>
-
-                            <td><a href="#">Eliminar</a> </td>
-
+                            if(existeNota($alumno['idalumno'],$id_curso,$conn) > 0){
+                                echo '<td><a href=#">Eliminar</a> </td>';
+                            }else{
+                                echo '<td>Sin notas</td>';
+                            }
+                            ?>
                         </tr>
-                        <?php $index_id_alumno=$alumno['id_alum']; ?>
+                        <?php $index_id_alumno=$alumno['idalumno']; ?>
                     <?php } ?>
                 <?php $index++; endforeach; ?>
                 <tr></tr>

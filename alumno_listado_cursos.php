@@ -1,12 +1,13 @@
 <?php
 require 'functions.php';
 
-$permisos = ['Profesor'];
+$permisos = ['Alumno'];
 permisos($permisos);
 //consulta los alumnos para el listaddo de alumnos
-$curso = $conn->prepare("select m.id, m.nombre, m.unidcreditos, m.id_ciclo, m.id_periodo, s.nombre as nombreseccion, d.id_usuario_docente, d.id_seccion from materias as m inner join docenteasignatura as d on m.id = d.id_materia inner join secciones as s on d.id_seccion=s.id");
+$curso = $conn->prepare("select m.id as id_curso, m.nombre as nombrecurso, s.nombre as nombreseccion, i.nombres as nombreprofesor, i.apellidos as apellidoprofesor, m.unidcreditos, m.id_ciclo, m.id_periodo from users as u inner join alumasignatura as aa on aa.id_alum=u.id inner join docenteasignatura as d on d.id_materia=aa.id_asignatura inner join materias as m on m.id=aa.id_asignatura inner join infousuarios as i on i.id_usu=d.id_usuario_docente inner join secciones as s on s.id=d.id_seccion where u.id=".$_SESSION["id_usu"]);
 $curso->execute();
 $curso = $curso->fetchAll();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,33 +37,23 @@ $curso = $curso->fetchAll();
             <table class="table" cellspacing="0" cellpadding="0">
                 <tr>
                     <th>Nombre del curso</th>
-                    <th>#Alumnos</th>
+                    <th>Docente</th>
                     <th>Periodo</th>
                     <th>Sección</th>
                     <th colspan="2">Acciones</th>
                 </tr>
                 <?php foreach ($curso as $curso) :
                     
-                    $sqlnotas = $conn->prepare("select DISTINCT id_alum from alumasignatura where id_asignatura =".$curso['id']);
-                    $sqlnotas->execute();
-                    $notas = $sqlnotas->fetchAll();
-                    $num_alumnos = $sqlnotas->rowCount();
-                    
-                ?>
-                <tr>
-                    <?php if($curso['id_usuario_docente']==$_SESSION["id_usu"]){ ?>
-                        <td align="center"><?php echo $curso['nombre'] ?></td>
-                        <td align="center"><?php echo $num_alumnos ?></td>
+                    ?>
+                    <tr>
+                        <td align="center"><?php echo $curso['nombrecurso'] ?></td>
+                        <td align="center"><?php echo $curso['nombreprofesor']." ".$curso['apellidoprofesor'] ?></td>
                         <td align="center"><?php echo $curso['id_periodo'] ?></td>
                         <td align="center"><?php echo $curso['nombreseccion'] ?></td>
-                        <td><a href="profe_registro_notas.php?id=<?php echo $curso['id'] ?>">Registrar Notas</a> </td>
-                        <td><a href="profe_listado_alumnos.php?id=<?php echo $curso['id'] ?>">Ver alumnos</a> </td>
-                    <?php } ?>
+                        <td><a href="alumno_detalle_notas.php?id_alum=<?php echo $_SESSION["id_usu"] ?>&id_curso=<?php echo $curso['id_curso']; ?>">Ver notas</a> </td>                    
                 </tr>
                 <?php endforeach;?>
             </table>
-                <br><br>
-
                 <!--mostrando los mensajes que recibe a traves de los parametros en la url-->
                 <?php
                 if(isset($_GET['err']))
@@ -70,8 +61,8 @@ $curso = $curso->fetchAll();
                 if(isset($_GET['info']))
                     echo '<span class="success">Registro almacenado correctamente!</span>';
                 ?>
-
-
+                <br>
+                <a class="abutton" href="alumno_reporte_notas.php?id=<?php echo $_SESSION["id_usu"] ?>">Reporte de notas</a>
         </div>
 </div>
 

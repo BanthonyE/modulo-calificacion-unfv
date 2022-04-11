@@ -7,7 +7,7 @@ if(isset($_GET['id'])) {
 
     $id_profesor = $_GET['id'];
 
-    $users = $conn->prepare("select * from users where id = ".$id_profesor);
+    $users = $conn->prepare("select u.id, u.username,u.password,i.nombres,i.apellidos,i.genero,i.correo, u.rol from users as u inner join infousuarios as i on u.id=i.id_usu where u.id = ".$id_profesor);
     $users->execute();
     $users = $users->fetch();
 
@@ -35,7 +35,7 @@ if(isset($_GET['id'])) {
         <li class="active"><a href="admin_listado_docentes.php">Docente</a> </li>
         <li><a href="admin_listado_alumnos.php">Alumno</a> </li>
         <li><a href="admin_listado_cursos.php">Cursos</a> </li>
-        <li><a href="admin_listado_Asignación.php">Asignación</a> </li>
+        <li><a href="admin_listado_asignacion.php">Asignación</a> </li>
         <li class="right"><a href="logout.php">Salir</a> </li>
     </ul>
 </nav>
@@ -53,9 +53,20 @@ if(isset($_GET['id'])) {
                 <label>Password</label><br>
                 <input type="text" required name="Password" value="<?php echo $users['password']?>" maxlength="45">
                 <br><br>
-                <label>Nombre</label><br>
-                <input type="text" required name="Nombre" value="<?php echo $users['nombre']?>" maxlength="45" >
+
+                <label>Nombres</label><br>
+                <input type="text" required name="nombres" value="<?php echo $users['nombres']?>" maxlength="45">
+                <br>
+                <label>Apellidos</label><br>
+                <input type="text" required name="apellidos" value="<?php echo $users['apellidos']?>" maxlength="45">
                 <br><br>
+                <label>Genero</label><br>
+                <input type="text" required name="genero" value="<?php echo $users['genero']?>" maxlength="45" placeholder="M/F">
+                <br><br>
+                <label>Correo</label><br>
+                <input type="text" name="correo" required value="<?php echo $users['correo']?>" placeholder="xxxxx@unfv.edu.pe">
+                <br><br>
+
                 <label>Rol</label><br>
                 <input type="text" readonly name="Profesor" value="Profesor" value="<?php echo $users['rol']?>">
                 <br><br>

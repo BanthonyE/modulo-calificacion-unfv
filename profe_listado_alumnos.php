@@ -8,7 +8,7 @@ if(isset($_GET['id'])) {
 
     $id_curso = $_GET['id'];
 
-    $curso = $conn->prepare("select m.nombre,a.nombres,a.apellidos from materias as m inner join notas as n on m.id = n.id_materia inner join alumnos as a on n.id_alumno = a.id where m.id =".$id_curso);
+    $curso = $conn->prepare("select distinct m.id,m.nombre,aa.id_alum,i.nombres,i.apellidos from materias as m inner join alumasignatura as aa on m.id = aa.id_asignatura inner join infousuarios as i on i.id_usu=aa.id_alum where m.id =".$id_curso);
     $curso->execute();
     $curso = $curso->fetchAll();
 
@@ -47,6 +47,10 @@ if(isset($_GET['id'])) {
 <div class="body">
     <div class="panel">
             <h4>Listado de alumnos del curso de <?php echo $nombrecurso[0]['nombre'] ?></h4>
+
+            <button type="reset" onclick="window.location.href='profe_listado_cursos.php'">Regresar</button>
+            <br>
+            <br>
             <table class="table" cellspacing="0" cellpadding="0">
                 <tr>
                     <th>#</th>
@@ -57,13 +61,13 @@ if(isset($_GET['id'])) {
                 <tr>
                         <td align="center"><?php echo $cont ?></td>
                         <td align="center"><?php echo $curso['apellidos']." ".$curso['nombres'] ?></td>
-                        <td align="center"><a href="profe_detalle_curso.php?id=<?php echo $curso['id_carrera'] ?>">Ver nota</a> </td>
+                        <td align="center"><a href="profe_detalle_notas.php?id=<?php echo $curso['id_alum']?>&idcurso=<?php echo $curso['id']?>">Ver nota</a> </td>
 
                 </tr>
                 <?php endforeach;?>
             </table>
                 <br><br>
-
+                <button onclick="window.location.href='profe_consulta_notas.php?id=<?php echo $id_curso ?>'">Consultar Notas</button>
                 <a class="btn-link" href="profe_registro_notas.php?id=<?php echo $id_curso ?>">Registrar Notas</a>
                 <br><br>
                 <!--mostrando los mensajes que recibe a traves de los parametros en la url-->

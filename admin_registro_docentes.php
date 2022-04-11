@@ -27,7 +27,7 @@ permisos($permisos);
         <li><a href="admin_listado_alumnos.php">Alumno</a> </li>
         <li class="right"><a href="logout.php">Salir</a> </li>
         <li><a href="admin_listado_cursos.php">Cursos</a> </li>
-        <li><a href="admin_listado_Asignación.php">Asignación</a> </li>
+        <li><a href="admin_listado_asignacion.php">Asignación</a> </li>
     </ul>
 </nav>
 
@@ -41,8 +41,17 @@ permisos($permisos);
                 <label>Password</label><br>
                 <input type="text" required name="Password" maxlength="45">
                 <br><br>
-                <label>Nombre</label><br>
-                <input type="text" required name="Nombre" maxlength="45">
+                <label>Nombres</label><br>
+                <input type="text" required name="nombres" maxlength="45">
+                <br>
+                <label>Apellidos</label><br>
+                <input type="text" required name="apellidos" maxlength="45">
+                <br><br>
+                <label>Genero</label><br>
+                <input type="text" required name="genero" maxlength="45" placeholder="M/F">
+                <br><br>
+                <label>Correo</label><br>
+                <input type="text" name="correo" required placeholder="xxxxx@unfv.edu.pe">
                 <br><br>
                 <label>Rol</label><br>
                 <input type="text" readonly name="Profesor" value="Profesor">

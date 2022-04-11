@@ -40,7 +40,7 @@ if(isset($_GET['id'])) {
         <li ><a href="admin_listado_docentes.php">Docente</a> </li>
         <li><a href="admin_listado_alumnos.php">Alumno</a> </li>
         <li class="active"><a href="admin_listado_cursos.php">Cursos</a> </li>
-        <li><a href="admin_listado_Asignación.php">Asignación</a> </li>
+        <li><a href="admin_listado_asignacion.php">Asignación</a> </li>
         <li class="right"><a href="logout.php">Salir</a> </li>
     </ul>
 </nav>

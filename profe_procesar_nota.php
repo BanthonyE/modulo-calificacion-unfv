@@ -6,37 +6,27 @@ else {
     //incluimos el archivo para hacer la conexion
     require 'functions.php';
     //Recuperamos los valores que vamos a llenar en la BD
-    $id_materia = htmlentities($_POST ['id_curso']);
+    $id_curso = htmlentities($_POST ['id_curso']);
     $num_eval = htmlentities($_POST ['num_eval']);
-    $num_alumnos = htmlentities($_POST['num_alumnos']); 
+    $num_alumnos = htmlentities($_POST['num_alumnos']);
 
     //insertar es el nombre del boton guardar que esta en el archivo notas.view.php
     if (isset($_POST['insertar'])){
 
-        /*Recorro el numero de estudiantes*/
-        for($i = 0; $i < $num_alumnos; $i++){
-            $id_alumno = htmlentities($_POST['id_alumno' . $i]);
-            //por cada estudiante se recorre el numero de evaluaciones para extraer la nota de cada una
-                //funcion existeNota en functions.php valida que la nota no exista segun el alumno y la materia
-                if(existeNota($id_alumno,$id_materia,$conn) == 0){
-                    for($j = 0; $j < $num_eval; $j++) {
-                        $nota = htmlentities($_POST['evaluacion' . $j . 'alumno' . $i]);
-                        $observaciones = htmlentities($_POST['observaciones' . $i]);
-                        $sql_insert = "insert into notas (id_alumno, id_materia, nota, observaciones) values ('$id_alumno', '$id_materia', '$nota','$observaciones' )";
-                        $result = $conn->query($sql_insert);
-                    }
-                }elseif(existeNota($id_alumno,$id_materia,$conn) > 0){
-                    //hace una actualizacion o update
-                    for($j = 0; $j < $num_eval; $j++) {
-                        $id_nota = htmlentities($_POST['idnota' . $j . 'alumno' . $i]);
-                        $nota = htmlentities($_POST['evaluacion' . $j . 'alumno' . $i]);
-                        $observaciones = htmlentities($_POST['observaciones' . $i]);
-                        $sql_query = "update notas set nota = '$nota', observaciones = '$observaciones' where id = ".$id_nota;
-                        $result = $conn->query($sql_query);
-                    }
-                }
 
-        }
+        $sqlalumnos = $conn->prepare("select m.id as idmateria, m.nombre, m.num_evaluaciones,n.nota1,n.nota2,n.nota3,n.parcial,n.final,n.promedio1,n.sustitutorio,n.aplazado,n.observaciones, a.id as idalumno, a.nombres,a.apellidos from materias as m inner join notas as n on m.id = n.id_materia inner join alumnos as a on n.id_alumno = a.id where m.id =".$id_curso);
+        $sqlalumnos->execute();
+        $alumnos = $sqlalumnos->fetchAll();
+
+        /*Recorro el numero de estudiantes*/
+        foreach ($alumnos as $index => $alumno) :
+            
+
+            
+            $id_alumno = htmlentities($_POST['n1'.$i]);
+
+        endforeach;
+
         if (isset($result)) {
             header('location:notas.view.php?grado='.$id_grado.'&materia='.$id_materia.'&seccion='.$id_seccion.'&revisar=1&info=1');
         } else {

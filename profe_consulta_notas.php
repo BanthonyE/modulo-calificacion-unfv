@@ -36,8 +36,7 @@ if(isset($_GET['id'])) {
     <ul>
         <li><a href="inicio.view.php">Inicio</a> </li>
         <li><a href="profe_listado_cursos.php">Listado de Cursos</a> </li>
-        <li class="active"><a href="#">Registro de Notas</a> </li>
-        <li><a href="#">Consulta de Notas</a> </li>
+        <li class="active"><a href="#">Consulta de Notas</a> </li>
         <li class="right"><a href="logout.php">Salir</a> </li>
     </ul>
 </nav>
@@ -97,7 +96,7 @@ if(isset($_GET['id'])) {
             $num_alumnos = $sqlalumnos->rowCount();
             ?>
             <br>
-            <button type="reset" onclick="window.location.href='profe_listado_cursos.php'">Regresar</button>
+            <button type="submit" name="insertar">Descargar reporte de notas</button>
             <br>
             <br>
                 <form action="profe_procesar_nota.php" method="post">
@@ -133,45 +132,34 @@ if(isset($_GET['id'])) {
                     <input type="hidden" value="<?php echo $num_eval ?>" name="num_eval">
                      <!-- campos para devolver los parametros en el get y mantener los mismos datos al hacer el header location-->
                     <input type="hidden" value="<?php echo $id_curso ?>" name="id_curso">    
-                    
-                    
-
+                                
 
                     <?php if(strcmp(''.$alumno['id_alum'],''.$index_id_alumno)){ ?>
 
                         <tr>
-                            <td align="center">1</td>
+                        <td align="center">1</td>
                             <td><?php echo $alumno['apellidos'] ?></td>
                             <td><?php echo $alumno['nombres'] ?></td>
 
-                            <input type="hidden" value="<?php echo $alumno['nota1'] ?>" name="xn1<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['nota1'] ?>" name="n1<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            <td><?php echo $alumno['nota1'] ?></td>
 
-                            <input type="hidden" value="<?php echo $alumno['nota2'] ?>" name="xn2<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['nota2'] ?>" name="n2<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            <td><?php echo $alumno['nota2'] ?></td>
 
-                            <input type="hidden" value="<?php echo $alumno['nota3'] ?>" name="xn3<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['nota3'] ?>" name="n3<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            <td><?php echo $alumno['nota3'] ?></td>
 
-                            <input type="hidden" value="<?php echo $alumno['parcial'] ?>" name="xn4<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['parcial'] ?>" name="n4<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            <td><?php echo $alumno['parcial'] ?></td>
 
-                            <input type="hidden" value="<?php echo $alumno['final'] ?>" name="xn5<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['final'] ?>" name="n5<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            <td><?php echo $alumno['final'] ?></td>
 
-                            <input type="hidden" value="<?php echo $prom1 ?>" name="xn5<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $prom1 ?>" name="n6<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            <td><?php echo $prom1 ?></td>
 
-                            <input type="hidden" value="<?php echo $alumno['sustitutorio'] ?>" name="xn7<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['sustitutorio'] ?>" name="n7<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            <td><?php echo $alumno['sustitutorio'] ?></td>
                         
-                            <input type="hidden" value="<?php echo $alumno['promedio_final'] ?>" name="xn8<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['sustitutorio'] ?>" name="n8<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            <td><?php echo $alumno['sustitutorio'] ?></td>
 
-                            <input type="hidden" value="<?php echo $alumno['observaciones'] ?>" name="xobs<?php echo $alumno['id_alum']?>">
-                            <td><input type="text" maxlength="5" value="<?php echo $alumno['observaciones'] ?>" name="obs<?php echo $alumno['id_alum']?>" class="txtnota"></td>
+                            <td><?php echo $alumno['observaciones'] ?></td>
 
-                            <td><a href="#">Eliminar</a> </td>
+                            <td><a href="#">Corregir</a></td>
 
                         </tr>
                         <?php $index_id_alumno=$alumno['id_alum']; ?>
@@ -180,7 +168,7 @@ if(isset($_GET['id'])) {
                 <tr></tr>
             </table>
                 <br>
-                <button type="submit" name="insertar">Guardar</button> <button type="reset">Limpiar</button>
+                <button type="reset" onclick="window.location.href='profe_listado_alumnos.php?id=<?php echo $id_curso ?>'">Regresar</button>
                 <br>
             </form>
 

@@ -4,7 +4,8 @@ require 'functions.php';
 $permisos = ['Administrador','Profesor'];
 permisos($permisos);
 //consulta los alumnos para el listaddo de alumnos
-$users = $conn->prepare("select id, username,password,nombre, rol from users ");
+$users = $conn->prepare("select u.id, u.username,u.password,i.nombres,i.apellidos,i.genero,i.correo, u.rol from users as u inner join infousuarios as i on 
+u.id=i.id_usu");
 $users->execute();
 $users = $users->fetchAll();
 ?>
@@ -29,7 +30,7 @@ $users = $users->fetchAll();
         <li class="active"><a href="admin_listado_docentes.php">Docente</a> </li>
         <li><a href="admin_listado_alumnos.php">Alumno</a> </li>
         <li><a href="admin_listado_cursos.php">Cursos</a> </li>
-        <li><a href="admin_listado_Asignación.php">Asignación</a> </li>
+        <li><a href="admin_listado_asignacion.php">Asignación</a> </li>
         <li class="right"><a href="logout.php">Salir</a> </li>
     </ul>
 </nav>
@@ -39,7 +40,7 @@ $users = $users->fetchAll();
             <h4>Listado de Docentes</h4>
             <table class="table" cellspacing="0" cellpadding="0">
                 <tr>
-                    <th>No de<br>lista</th><th>Username</th><th>Password</th><th>Nombre</th><th>Rol</th>
+                    <th>No de<br>lista</th><th>Username</th><th>Password</th><th>Nombre</th><th>apellidos</th><th>Genero</th><th>Correo</th><th>Rol</th>
                     <th>Editar</th><th>Eliminar</th><th>Asignación</th>
                 </tr>
                 <?php foreach ($users as $u) :?>
@@ -47,8 +48,13 @@ $users = $users->fetchAll();
                     <?php
             if ($u['rol'] == "Profesor") { ?>
     
-                    <td align="center"><?php echo $u['id'] ?></td><td><?php echo $u['username'] ?></td>
-                    <td><?php echo $u['password'] ?></td><td align="center"><?php echo $u['nombre'] ?></td>
+                    <td align="center"><?php echo $u['id'] ?></td>
+                    <td><?php echo $u['username'] ?></td>
+                    <td><?php echo $u['password'] ?></td>
+                    <td align="center"><?php echo $u['nombres'] ?></td>
+                    <td align="center"><?php echo $u['apellidos'] ?></td>
+                    <td align="center"><?php echo $u['genero'] ?></td>
+                    <td align="center"><?php echo $u['correo'] ?></td>
                     <td align="center"><?php echo $u['rol'] ?></td>
                     <td><a href="admin_edit_docentes.php?id=<?php echo $u['id'] ?>">Editar</a> </td>
                     <td><a href="admin_delete_docentes.php?id=<?php echo $u['id'] ?>">Eliminar</a> </td>

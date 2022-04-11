@@ -4,9 +4,10 @@ require 'functions.php';
 $permisos = ['Administrador','Profesor'];
 permisos($permisos);
 //consulta los alumnos para el listaddo de alumnos
-$cursos = $conn->prepare("select *,m.nombre as materia from materias as m inner join periodo as p on m.id_periodo = p.id_periodo");
-$cursos->execute();
-$cursos = $cursos->fetchAll();
+$docenasig = $conn->prepare("select *, m.nombre as mnombre,m.id_ciclo as mciclo, u.nombre as unombre,s.nombre as snombre, d.id_docasig as iddoc from docenteasignatura as d inner join materias as m on d.id_materia = m.id
+ inner join users as u on u.id = d.id_usuario_docente inner join secciones as s on s.id=d.id_seccion order by iddoc");
+$docenasig->execute();
+$docenasig = $docenasig->fetchAll();
 ?>
 <!DOCTYPE html>
 <html>
@@ -18,7 +19,7 @@ $cursos = $cursos->fetchAll();
 </head>
 <body>
 <div class="header">
-        <h1>Listado de Cursos</h1>
+        <h1>Listado de Docente Asignados</h1>
         <h3>Usuario:  <?php echo $_SESSION["username"] ?></h3>
 </div>
 <nav>
@@ -28,31 +29,30 @@ $cursos = $cursos->fetchAll();
         <li><a href="admin_listado_carrera.php">Carrera</a> </li>
         <li ><a href="admin_listado_docentes.php">Docente</a> </li>
         <li><a href="admin_listado_alumnos.php">Alumno</a> </li>
-        <li class="active"><a href="admin_listado_cursos.php">Cursos</a> </li>
-        <li><a href="admin_listado_asignacion.php">Asignación</a> </li>
+        <li ><a href="admin_listado_cursos.php">Cursos</a> </li>
+        <li class="active"><a href="admin_listado_asignacion.php">Asignación</a> </li>
         <li class="right"><a href="logout.php">Salir</a> </li>
     </ul>
 </nav>
 
 <div class="body">
     <div class="panel">
-            <h4>Listado de Cursos</h4>
+            <h4>Listado de Docentes Asignados</h4>
             <table class="table" cellspacing="0" cellpadding="0">
                 <tr>
-                    <th>No de<br>lista</th><th>Nombre</th><th>N° Evaluaciones</th><th>Unid. Cred.</th><th>Ciclo</th><th>Periodo</th>
-                    <th>Editar</th><th>Eliminar</th>
+                    <th>Codigo</th><th>Asignatura</th><th>Ciclo</th><th>Seccion</th><th>Docente</th><th>Eliminar</th>
                 </tr>
-                <?php foreach ($cursos as $c) :?>
+                <?php foreach ($docenasig as $dc) :?>
                 <tr>
-                    <td align="center"><?php echo $c['id'] ?></td>
-                    <td><?php echo $c['materia'] ?></td>
-                    <td><?php echo $c['num_evaluaciones'] ?></td>
-                    <td align="center"><?php echo $c['unidcreditos'] ?></td>
-                    <td align="center"><?php echo $c['id_ciclo'] ?></td>
-                    <td align="center"><?php echo $c['nombre'] ?></td>
+                    <td align="center"><?php echo $dc['iddoc'] ?></td>
+                    
+                    <td><?php echo $dc['mnombre'] ?></td>
+                    <td><?php echo $dc['mciclo'] ?></td>
+                     <td><?php echo $dc['snombre'] ?></td>
+                    <td><?php echo $dc['unombre'] ?></td>
 
-                    <td><a href="admin_edit_cursos.php?id=<?php echo $c['id'] ?>">Editar</a> </td>
-                    <td><a href="admin_delete_cursos.php?id=<?php echo $c['id'] ?>">Eliminar</a> </td>
+
+                    <td><a href="admin_delete_asignacion.php?id=<?php echo $dc['iddoc'] ?>">Eliminar</a> </td>
 
                    
                 </tr>
@@ -60,7 +60,7 @@ $cursos = $cursos->fetchAll();
             </table>
                 <br><br>
 
-                <a class="btn-link" href="admin_registro_cursos.php">Agregar Cursos</a>
+                <a class="btn-link" href="admin_listado_docentes.php">Ver Docentes</a>
                 <br><br>
                 <!--mostrando los mensajes que recibe a traves de los parametros en la url-->
                 <?php
