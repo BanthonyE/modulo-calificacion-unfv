@@ -7,7 +7,7 @@ if(isset($_GET['id'])) {
 
     $id_profesor = $_GET['id'];
 
-    $users = $conn->prepare("select * from users where id = ".$id_profesor);
+    $users = $conn->prepare("select * from users as u inner join infousuarios as i on u.id=i.id_usu where u.id = ".$id_profesor);
     $users->execute();
     $users = $users->fetch();
 
@@ -15,7 +15,7 @@ if(isset($_GET['id'])) {
     $cursos->execute();
     $cursos = $cursos->fetchAll();
 
-      $seccion = $conn->prepare("select * from secciones");
+    $seccion = $conn->prepare("select * from secciones");
     $seccion->execute();
     $seccion = $seccion->fetchAll();
 
@@ -58,6 +58,7 @@ if(isset($_GET['id'])) {
                 <label>Asignaturas</label><br>
                 <select name="asignatura" required>
                     <?php foreach ($cursos as $c):?>
+                        <option value="" selected disabled hidden>Elegir asignatura</option>
                         <option value="<?php echo $c['id'] ?>" ><?php echo $c['nombre'] ?></option>
                     <?php endforeach;?>
                 </select>
@@ -65,6 +66,7 @@ if(isset($_GET['id'])) {
                 <label>Seccion</label><br>
                 <select name="seccion" required>
                     <?php foreach ($seccion as $s):?>
+                        <option value="" selected disabled hidden>Elegir sección</option>
                         <option value="<?php echo $s['id'] ?>" ><?php echo $s['nombre'] ?></option>
                     <?php endforeach;?>
                 </select>
@@ -74,7 +76,7 @@ if(isset($_GET['id'])) {
                <br>
                <br>
                 <label>Nombre</label><br>
-                <input type="text" readonly name="nombre" value="<?php echo $users['nombre'] ?>">
+                <input type="text" readonly name="nombre" value="<?php echo $users['nombres'] ?>">
                <br>
                 <br>
                 <label>Rol Desempeñado</label><br>

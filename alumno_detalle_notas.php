@@ -22,8 +22,8 @@ permisos($permisos);
 <nav>
     <ul>
         <li><a href="inicio.view.php">Inicio</a> </li>
-        <li class="active"><a href="profe_listado_cursos.php">Listado de Cursos</a> </li>
-        <li><a href="#">Consulta de Notas</a> </li>
+        <li><a href="profe_listado_cursos.php">Listado de Cursos</a> </li>
+        <li class="active"><a href="#">Consulta de Notas</a> </li>
         <li class="right"><a href="logout.php">Salir</a> </li>
     </ul>
 </nav>
@@ -37,14 +37,14 @@ permisos($permisos);
             $idcurso = $_GET['id_curso'];
 
             //extrayendo el numero de evaluaciones para esa materia seleccionada
-            $notas = $conn->prepare("select m.id as idmateria, m.nombre,aa.id_alum, m.num_evaluaciones, n.nota1, n.nota2, n.nota3, n.parcial, n.final, n.promedio1, n.sustitutorio, n.aplazado, n.observaciones, i.nombres, i.apellidos from materias as m inner join alumasignatura as aa on aa.id_asignatura=m.id inner join notas as n on n.id_alumasig=aa.id inner join infousuarios as i on i.id_usu=aa.id_alum where aa.id_alum =".$idalum." and aa.id_asignatura=".$idcurso);
+            $notas = $conn->prepare("select m.id as idmateria, m.nombre as nombremateria,aa.id_alum, m.num_evaluaciones, n.nota1, n.nota2, n.nota3, n.parcial, n.final, n.promedio1, n.sustitutorio, n.aplazado, n.observaciones, i.nombres, i.apellidos from materias as m inner join alumasignatura as aa on aa.id_asignatura=m.id inner join notas as n on n.id_alumasig=aa.id inner join infousuarios as i on i.id_usu=aa.id_alum docente where aa.id_alum =".$idalum." and aa.id_asignatura=".$idcurso);
             $notas->execute();
             $notas = $notas->fetchAll();
             ?>
 
                 <table class="table" cellpadding="0" cellspacing="0">
                 <tr>
-                    <th>#</th><th>Apellidos</th><th>Nombres</th>
+                    <th>#</th><th>Curso</th>
                     <th>Nota 1</th>
                     <th>Nota 2</th>
                     <th>Nota 3</th>
@@ -79,8 +79,7 @@ permisos($permisos);
 
                         <tr>
                             <td align="center">1</td>
-                            <td><?php echo $alumno['apellidos'] ?></td>
-                            <td><?php echo $alumno['nombres'] ?></td>
+                            <td><?php echo $alumno['nombremateria'] ?></td>
 
                             <td><?php echo $alumno['nota1'] ?></td>
 

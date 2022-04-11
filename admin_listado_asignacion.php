@@ -4,10 +4,10 @@ require 'functions.php';
 $permisos = ['Administrador','Profesor'];
 permisos($permisos);
 //consulta los alumnos para el listaddo de alumnos
-$docenasig = $conn->prepare("select *, m.nombre as mnombre,m.id_ciclo as mciclo, u.nombre as unombre,s.nombre as snombre, d.id_docasig as iddoc from docenteasignatura as d inner join materias as m on d.id_materia = m.id
- inner join users as u on u.id = d.id_usuario_docente inner join secciones as s on s.id=d.id_seccion order by iddoc");
+$docenasig = $conn->prepare("select *, m.nombre as mnombre,m.id_ciclo as mciclo, i.nombres as unombre,s.nombre as snombre, d.id_docasig as iddoc from docenteasignatura as d inner join materias as m on d.id_materia = m.id inner join users as u on u.id = d.id_usuario_docente inner join secciones as s on s.id=d.id_seccion inner join infousuarios as i on i.id_usu=u.id order by d.id_docasig");
 $docenasig->execute();
 $docenasig = $docenasig->fetchAll();
+
 ?>
 <!DOCTYPE html>
 <html>

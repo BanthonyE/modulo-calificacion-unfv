@@ -4,7 +4,7 @@ require 'functions.php';
 $permisos = ['Administrador','Profesor'];
 permisos($permisos);
 //consulta los alumnos para el listaddo de alumnos
-$users = $conn->prepare("select u.id, u.username,u.password,i.nombres,i.apellidos,i.genero,i.correo, u.rol from users as u inner join infousuarios as i on 
+$users = $conn->prepare("select u.id as idusuario, u.username,u.password,i.nombres,i.apellidos,i.genero,i.correo, u.rol from users as u inner join infousuarios as i on 
 u.id=i.id_usu");
 $users->execute();
 $users = $users->fetchAll();
@@ -48,7 +48,7 @@ $users = $users->fetchAll();
                     <?php
             if ($u['rol'] == "Profesor") { ?>
     
-                    <td align="center"><?php echo $u['id'] ?></td>
+                    <td align="center"><?php echo $u['idusuario'] ?></td>
                     <td><?php echo $u['username'] ?></td>
                     <td><?php echo $u['password'] ?></td>
                     <td align="center"><?php echo $u['nombres'] ?></td>
@@ -56,9 +56,9 @@ $users = $users->fetchAll();
                     <td align="center"><?php echo $u['genero'] ?></td>
                     <td align="center"><?php echo $u['correo'] ?></td>
                     <td align="center"><?php echo $u['rol'] ?></td>
-                    <td><a href="admin_edit_docentes.php?id=<?php echo $u['id'] ?>">Editar</a> </td>
-                    <td><a href="admin_delete_docentes.php?id=<?php echo $u['id'] ?>">Eliminar</a> </td>
-                    <td><a href="admin_asignacion_docentes.php?id=<?php echo $u['id'] ?>">Asignación</a> </td>
+                    <td><a href="admin_edit_docentes.php?id=<?php echo $u['idusuario'] ?>">Editar</a> </td>
+                    <td><a href="admin_delete_docentes.php?id=<?php echo $u['idusuario'] ?>">Eliminar</a> </td>
+                    <td><a href="admin_asignacion_docentes.php?id=<?php echo $u['idusuario'] ?>">Asignación</a> </td>
             <?php }
             ?>
                    

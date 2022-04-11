@@ -26,7 +26,6 @@ $curso = $curso->fetchAll();
     <ul>
         <li><a href="inicio.view.php">Inicio</a> </li>
         <li class="active"><a href="profe_listado_cursos.php">Listado de Cursos</a> </li>
-        <li><a href="#">Consulta de Notas</a> </li>
         <li class="right"><a href="logout.php">Salir</a> </li>
     </ul>
 </nav>

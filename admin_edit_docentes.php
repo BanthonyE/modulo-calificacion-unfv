@@ -7,7 +7,7 @@ if(isset($_GET['id'])) {
 
     $id_profesor = $_GET['id'];
 
-    $users = $conn->prepare("select u.id, u.username,u.password,i.nombres,i.apellidos,i.genero,i.correo, u.rol from users as u inner join infousuarios as i on u.id=i.id_usu where u.id = ".$id_profesor);
+    $users = $conn->prepare("select u.id as idusuario, u.username,u.password,i.nombres,i.apellidos,i.genero,i.correo, u.rol from users as u inner join infousuarios as i on u.id=i.id_usu where u.id = ".$id_profesor);
     $users->execute();
     $users = $users->fetch();
 
@@ -45,7 +45,7 @@ if(isset($_GET['id'])) {
             <h4>Edición de Docente</h4>
             <form method="post" class="form" action="admin_procesar_docentes.php">
                 <!--colocamos un campo oculto que tiene el id del facultad-->
-                <input type="hidden" value="<?php echo $users['id']?>" name="id_docente">
+                <input type="hidden" value="<?php echo $users['idusuario']?>" name="id_docente">
                 
                 <label>Username</label><br>
                 <input type="text" required name="Username" value="<?php echo $users['username']?>" maxlength="45">

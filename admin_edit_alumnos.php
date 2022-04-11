@@ -7,7 +7,8 @@ if(isset($_GET['id'])) {
 
     $id_alumno = $_GET['id'];
 
-    $alumno = $conn->prepare("select * from alumnos where id = ".$id_alumno);
+    $alumno = $conn->prepare("select u.id as idusuario, u.username,u.password,i.nombres,i.apellidos,i.genero,i.correo, 
+    u.rol from users as u inner join infousuarios as i on u.id=i.id_usu where u.id = ".$id_alumno);
     $alumno->execute();
     $alumno = $alumno->fetch();
 
@@ -45,8 +46,15 @@ if(isset($_GET['id'])) {
             <h4>Edición de Docente</h4>
             <form method="post" class="form" action="admin_procesar_alumnos.php">
                 <!--colocamos un campo oculto que tiene el id del facultad-->
-                <input type="hidden" value="<?php echo $alumno['id']?>" name="id_alumno">
+                <input type="hidden" value="<?php echo $alumno['idusuario']?>" name="id_alumno">
                 
+                 <label>Username</label><br>
+                <input type="text" required name="Username" value="<?php echo $alumno['username']?>" maxlength="45">
+                <br>
+                <label>Password</label><br>
+                <input type="text" required name="Password" value="<?php echo $alumno['password']?>" maxlength="45">
+                <br><br>
+
                 <label>Nombres</label><br>
                 <input type="text" required name="nombres" value="<?php echo $alumno['nombres']?>" maxlength="45">
                 <br>
@@ -57,7 +65,11 @@ if(isset($_GET['id'])) {
                 <input type="text" required name="genero" value="<?php echo $alumno['genero']?>" maxlength="45" >
                 <br><br>
                 <label>Correo</label><br>
-                <input type="text" name="correo" value="Profesor" value="<?php echo $alumno['correo']?>">
+                <input type="text" name="correo" value="<?php echo $alumno['correo']?>">
+                <br><br>
+
+                <label>Rol</label><br>
+                <input type="text" readonly name="Alumno" value="Alumno" value="<?php echo $alumno['rol']?>">
                 <br><br>
 
                 <button type="submit" name="modificar">Guardar Cambios</button> <a class="btn-link" href="admin_listado_alumnos.php">Ver Listado</a>

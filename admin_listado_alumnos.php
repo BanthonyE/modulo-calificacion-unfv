@@ -4,7 +4,7 @@ require 'functions.php';
 $permisos = ['Administrador','Profesor'];
 permisos($permisos);
 //consulta los alumnos para el listaddo de alumnos
-$alumnos = $conn->prepare("select * from alumnos");
+$alumnos = $conn->prepare("select *,u.id as idusuario from users as u inner join infousuarios as i on u.id=i.id_usu");
 $alumnos->execute();
 $alumnos = $alumnos->fetchAll();
 ?>
@@ -43,11 +43,20 @@ $alumnos = $alumnos->fetchAll();
                 </tr>
                 <?php foreach ($alumnos as $alumno) :?>
                 <tr>
-                    <td align="center"><?php echo $alumno['id'] ?></td><td><?php echo $alumno['nombres'] ?></td>
+
+                 <?php
+            if ($alumno['rol'] == "Alumno") { ?>
+
+                    <td align="center"><?php echo $alumno['idusuario'] ?></td>
+                    <td><?php echo $alumno['nombres'] ?></td>
                     <td><?php echo $alumno['apellidos'] ?></td><td align="center"><?php echo $alumno['genero'] ?></td>
                     <td align="center"><?php echo $alumno['correo'] ?></td>
-                    <td><a href="admin_edit_alumnos.php?id=<?php echo $alumno['id'] ?>">Editar</a> </td>
-                    <td><a href="admin_delete_alumnos.php?id=<?php echo $alumno['id'] ?>">Eliminar</a> </td>
+                    <td><a href="admin_edit_alumnos.php?id=<?php echo $alumno['idusuario'] ?>">Editar</a> </td>
+                    <td><a href="admin_delete_alumnos.php?id=<?php echo $alumno['idusuario'] ?>">Eliminar</a> </td>
+
+                     <?php }
+            ?>
+               
                 </tr>
                 <?php endforeach;?>
             </table>

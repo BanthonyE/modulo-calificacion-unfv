@@ -35,6 +35,12 @@ permisos($permisos);
     <div class="panel">
             <h4>Registro de Alumnos</h4>
             <form method="post" class="form" action="admin_procesar_alumnos.php">
+                 <label>Username</label><br>
+                <input type="text" required name="Username" maxlength="45">
+                <br>
+                <label>Password</label><br>
+                <input type="text" required name="Password" maxlength="45">
+                <br><br>
                 <label>Nombres</label><br>
                 <input type="text" required name="nombres" maxlength="45">
                 <br>
@@ -46,6 +52,9 @@ permisos($permisos);
                 <br><br>
                 <label>Correo</label><br>
                 <input type="text" name="correo" required placeholder="xxxxx@unfv.edu.pe">
+                <br><br>
+                <label>Rol</label><br>
+                <input type="text" readonly name="Alumno" value="Alumno">
                 <br><br>
                 <button type="submit" name="insertar">Guardar</button> <button type="reset">Limpiar</button> <a class="btn-link" href="admin_listado_alumnos.php">Ver Listado</a>
                 <br><br>
